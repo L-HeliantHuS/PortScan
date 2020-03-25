@@ -10,7 +10,7 @@ import (
 )
 
 func ScanProcess(ip string, port int) ([]byte, error) {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Second * config.Timeouted)
+	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, port), time.Second * time.Duration(config.Timeouted))
 	if err != nil {
 		return nil, errors.New("Connect failed.")
 	}
@@ -42,7 +42,6 @@ func Scan(ip string, group *sync.WaitGroup) {
 		}
 		service, err := Check(data)
 		if err == nil {
-			fmt.Printf("[+] %s, Result: %s \n", ip, service)
 			SaveToFile(ip, port, service)
 			flag = true
 			break
@@ -62,10 +61,7 @@ func Scan(ip string, group *sync.WaitGroup) {
 			}
 			service, err := Check(data)
 			if err == nil {
-				fmt.Printf("[+] %s, Result: %s \n", ip, service)
-
 				SaveToFile(ip, port, service)
-
 				break
 			}
 		}
